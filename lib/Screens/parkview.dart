@@ -16,7 +16,7 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
   TextEditingController searchcontroller=TextEditingController();
 
   List<VechicleModel> parkedList = [];
-  
+  List<VechicleModel> SearchvehicleList=[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +123,7 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
                        
                   if(flag!=true){
                     parkedList.add(obj);
+                    SearchvehicleList=parkedList;
                    
                   }
 setState(() {
@@ -150,9 +151,10 @@ setState(() {
                 labelText: 'Search By Registration Number',
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value) => SearchVehicle(value),
             ),
             SizedBox(height: 8),
-            parkedList.length == 0
+           SearchvehicleList .length == 0
                 ? Expanded(
                     child: Center(
                       child: Text(
@@ -163,24 +165,28 @@ setState(() {
                   )
                 : Expanded(
                   child: ListView.builder(
-                      itemCount: parkedList.length,
+                      itemCount: SearchvehicleList.length,
                       itemBuilder: (context, index) {
                         return Card(
                           elevation: 5,
                           child: ListTile(
-                          leading: parkedList[index].radiobtntext=='Bike'?Icon(Icons.electric_bike):Icon(Icons.car_crash),
-                            title: Text(parkedList[index].reg),
+                          leading: SearchvehicleList[index].radiobtntext=='Bike'?Icon(Icons.pedal_bike,color: Colors.green):Icon(Icons.directions_car_filled,color: Colors.green),
+                            title: Text(SearchvehicleList[index].reg),
                             trailing: ElevatedButton(onPressed: (){
-                            if(parkedList[index].radiobtntext=='Car'){
+                            if(SearchvehicleList[index].radiobtntext=='Car'){
                               total_earning+=100;
                             }else{
                               total_earning+=50;
                             }
                             parkedList.removeAt(index);
+                            SearchvehicleList=parkedList;
 setState(() {
   
 });
-                            }, child: Text('Park')),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green),
+                             child: Text('Park out',style: TextStyle(color: Colors.white),)),
                                             
                           ),
                         );
@@ -193,4 +199,22 @@ setState(() {
       ),
     );
   }
+
+  void SearchVehicle(String query) {
+  List<VechicleModel> results = [];
+
+  if (query.isEmpty) {
+    results = parkedList;
+  } else {
+    results = parkedList
+        .where((item) =>
+            item.reg.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+
+  setState(() {
+    SearchvehicleList = results;
+  });
+}
+
 }
