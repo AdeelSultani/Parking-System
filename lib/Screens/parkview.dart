@@ -11,10 +11,12 @@ class ParkviewScreen extends StatefulWidget {
 class _ParkviewScreenState extends State<ParkviewScreen> {
   int total_earning = 0;
   String? raioButtonValue;
-  TextEditingController reg_no = TextEditingController();
-  TextEditingController searchController=TextEditingController();
+  bool flag=false;
+  TextEditingController regcontroller= TextEditingController();
+  TextEditingController searchcontroller=TextEditingController();
 
   List<VechicleModel> parkedList = [];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +33,7 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
         
           children: [
             Container(
-              width: 200,
+              width: 230,
               height: 33,
               decoration: BoxDecoration(
                 border: Border.all(
@@ -42,9 +44,9 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
               ),
               child: Center(
                 child: Text(
-                  'Total Earning: RS $total_earning',
+                  'Total Earning: RS ${total_earning}',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Colors.green,
                   ),
@@ -56,7 +58,7 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
               elevation: 10,
               child: Container(
                 width: 400,
-                height: 180,
+                height: 220,
                 decoration: BoxDecoration(
                   color: Colors.white70,
                   borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -67,13 +69,16 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
-                        controller: reg_no,
+                        controller: regcontroller,
                         decoration: InputDecoration(
                           label: Text('Registration Number'),
                           border: OutlineInputBorder(),
                         ),
                       ),
                     ),
+                    flag==true?Center(
+                      child: Text('Already Parked ',style: TextStyle(color: Colors.red)),
+                    ):
                     SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -104,17 +109,22 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
                     SizedBox(height: 2),
                     ElevatedButton(
                       onPressed: () {
-                          Icon radioicon;
-                        var text=reg_no.text.toString();
-                         if(raioButtonValue=='Bike'){
-                          radioicon=Icon(Icons.pedal_bike);
-                        }else{
-                          radioicon=Icon(Icons.car_crash);
-                        }
-                      VechicleModel  obj=VechicleModel(title:text , iconbtn: radioicon);
+                        
+                        var text=regcontroller.text.toString();
+                     for(int i=0;i<parkedList.length;i++){
+                      if(parkedList[i].reg==text){
+                        flag=true;
+                      }else{
+                        flag=false;
+                      }
+                     }
+                      
+                      VechicleModel  obj=VechicleModel(reg:text , radiobtntext: raioButtonValue!);
                        
-
-parkedList.add(obj);
+                  if(flag!=true){
+                    parkedList.add(obj);
+                   
+                  }
 setState(() {
   
 });
@@ -134,7 +144,7 @@ setState(() {
             ),
             SizedBox(height: 10),
             TextFormField(
-              controller: searchController,
+              controller: searchcontroller,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 labelText: 'Search By Registration Number',
@@ -158,10 +168,10 @@ setState(() {
                         return Card(
                           elevation: 5,
                           child: ListTile(
-                          leading: parkedList[index].iconbtn,
-                            title: Text(parkedList[index].title),
+                          leading: parkedList[index].radiobtntext=='Bike'?Icon(Icons.electric_bike):Icon(Icons.car_crash),
+                            title: Text(parkedList[index].reg),
                             trailing: ElevatedButton(onPressed: (){
-                            if(parkedList[index].iconbtn==Icon(Icons.car_crash)){
+                            if(parkedList[index].radiobtntext=='Car'){
                               total_earning+=100;
                             }else{
                               total_earning+=50;

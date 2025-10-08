@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class VechicleModel{
 
-  String title;
-  Icon iconbtn;
-
-  VechicleModel({required this.title,required this.iconbtn});
+  String reg;
+  String radiobtntext;
+  VechicleModel({required this.reg,required this.radiobtntext});
 }
