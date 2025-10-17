@@ -10,7 +10,7 @@ class ParkviewScreen extends StatefulWidget {
 
 class _ParkviewScreenState extends State<ParkviewScreen> {
   int total_earning = 0;
-  String? raioButtonValue;
+  String raioButtonValue='Car';
   bool flag=false;
   TextEditingController regcontroller= TextEditingController();
   TextEditingController searchcontroller=TextEditingController();
@@ -88,7 +88,7 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
                           value: 'Car',
                           groupValue: raioButtonValue,
                           onChanged: (String? val) {
-                            raioButtonValue = val;
+                            raioButtonValue = val!;
                             setState(() {});
                           },
                         ),
@@ -99,7 +99,7 @@ class _ParkviewScreenState extends State<ParkviewScreen> {
                           value: 'Bike',
                           groupValue: raioButtonValue,
                           onChanged: (String? val) {
-                            raioButtonValue = val;
+                            raioButtonValue = val!;
                             setState(() {});
                           },
                         ),
@@ -206,10 +206,7 @@ setState(() {
   if (query.isEmpty) {
     results = parkedList;
   } else {
-    results = parkedList
-        .where((item) =>
-            item.reg.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+    results = parkedList.where((item) => item.reg.toLowerCase().contains(query.toLowerCase())).toList();
   }
 
   setState(() {
